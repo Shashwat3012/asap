@@ -1,4 +1,4 @@
-from tkinter import *
+import tkinter as tk
 
 import customtkinter as ctk
 
@@ -15,11 +15,35 @@ scrollable_frame.pack(pady=20, padx=60, fill="both", expand=True)
 
 def login():
     print("Login Successful")
-
+    open_home()
 
 def signup():
     print("Signup successful")
 
+
+def open_home():
+    scrollable_frame.destroy()
+    home()
+
+def home():
+    home_frame = ctk.CTkScrollableFrame(master=root)
+
+    # input_field = tk.Entry(master=root, bd=0, bg="#D6D6D6", font="Arial")
+    # input_field.place(x=128, y=401, height=30, width=265)
+    entry = ctk.CTkEntry(master=root,
+                                   placeholder_text="Chat with me",
+                                   width=500,
+                                   height=25,
+                                   border_width=2,
+                                   corner_radius=10)
+    entry.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    entry.pack()
+    send_button = ctk.CTkButton(master=root, text="Send ", command=send_message)
+    send_button.pack(pady=12, padx=20)
+    # home_frame.pack(pady=200, padx=60, fill="both", expand=True)
+
+def send_message():
+    pass
 
 def open_signup():
     ctk.set_appearance_mode("dark")
