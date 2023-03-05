@@ -25,30 +25,83 @@ def login():
 
 
 def signup():
+    global username
     firstname = signup_entry1.get()
     lastname = signup_entry2.get()
     username = signup_entry3.get().lower()
+    username = username.replace(" ", "")
     password = signup_entry4.get()
     phone = signup_entry5.get()
     email = signup_entry6.get()
 
-    if username == "":
-        print("Username cannot be empty")
+    if user_exists():
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("green")
+        popup = ctk.CTkToplevel()
+        popup.geometry("400x150")
+        popup.title("Signup status")
+        popup.attributes('-topmost', True)
+        frame = ctk.CTkScrollableFrame(master=popup)
+        frame.pack(pady=20, padx=60, fill="both", expand=True)
+        label = ctk.CTkLabel(master=frame, text="Username already taken\ntry another username", width=25,
+                             font=('calibri', 20))
+        label.pack(pady=12, padx=10)
+        button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+        button.pack(pady=12, padx=10)
 
-    fetch_query = "SELECT * FROM asap_database.signup_table"
+    elif username == "":
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("green")
+        popup = ctk.CTkToplevel()
+        popup.geometry("350x250")
+        popup.title("Username cannot be empty")
+        popup.attributes('-topmost', True)
+        frame = ctk.CTkScrollableFrame(master=popup)
+        frame.pack(pady=20, padx=60, fill="both", expand=True)
+        label = ctk.CTkLabel(master=frame,
+                             text="Enter a valid username \n\n Username must be\nin lowercase and\n must not be empty \n\n(All the whitespaces\n are removed from the\n username)",
+                             width=25, font=('calibri', 20))
+        label.pack(pady=12, padx=10)
+        button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+        button.pack(pady=12, padx=10)
+    else:
+        # insertion of values to db
+        insert_query = "INSERT INTO asap_database.signup_table (first_name, last_name, username, password, phone, email) VALUES (%s, %s, %s, %s, %s, %s);"
+        values = (firstname, lastname, username, password, phone, email)
+        cursor.execute(insert_query, values)
+        connection.commit()
+        print("Signup successful")
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("green")
+        popup = ctk.CTkToplevel()
+        popup.geometry("350x200")
+        popup.title("Signup status")
+        popup.attributes('-topmost', True)
+        frame = ctk.CTkScrollableFrame(master=popup)
+        frame.pack(pady=20, padx=60, fill="both", expand=True)
+        label = ctk.CTkLabel(master=frame,
+                             text="Signup successful",
+                             width=25, font=('calibri', 20))
+        label.pack(pady=12, padx=10)
+        button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+        button.pack(pady=12, padx=10)
+        signup_window.destroy()
+
+def user_exists():
+    # if username == "":
+    #     print("Username cannot be empty")
+    #
+    fetch_query = "SELECT username FROM asap_database.signup_table"
     cursor.execute(fetch_query)
-    for row in cursor:
-        print(row[2])
-        if row[2] == username:
-            print("username already exists")
-            signup()
+    existing_users = []
 
-    insert_query = "INSERT INTO asap_database.signup_table (first_name, last_name, username, password, phone, email) VALUES (%s, %s, %s, %s, %s, %s);"
-    values = (firstname, lastname, username, password, phone, email)
-    cursor.execute(insert_query, values)
-    connection.commit()
-    print("Signup successful")
-    signup_window.destroy()
+    for row in cursor:
+        existing_users.append(row[0])
+
+    if username in existing_users:
+        return True
+    else:
+        return False
 
 
 def open_home():
@@ -98,6 +151,7 @@ def open_signup():
     signup_window = ctk.CTkToplevel()
     signup_window.geometry("800x500")
     signup_window.title("ASAP Signup")
+    signup_window.attributes('-topmost', True)
 
     frame = ctk.CTkScrollableFrame(master=signup_window)
     frame.pack(pady=20, padx=60, fill="both", expand=True)
