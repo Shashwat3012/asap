@@ -13,9 +13,12 @@ scrollable_frame = ctk.CTkScrollableFrame(master=root, width=200, height=200)
 scrollable_frame.pack(pady=20, padx=60, fill="both", expand=True)
 
 
+question = ""
+
 def login():
     print("Login Successful")
     open_home()
+
 
 def signup():
     print("Signup successful")
@@ -25,25 +28,30 @@ def open_home():
     scrollable_frame.destroy()
     home()
 
+
 def home():
     home_frame = ctk.CTkScrollableFrame(master=root)
 
     # input_field = tk.Entry(master=root, bd=0, bg="#D6D6D6", font="Arial")
     # input_field.place(x=128, y=401, height=30, width=265)
     entry = ctk.CTkEntry(master=root,
-                                   placeholder_text="Chat with me",
-                                   width=500,
-                                   height=25,
-                                   border_width=2,
-                                   corner_radius=10)
+                         placeholder_text="Chat with me",
+                         width=500,
+                         height=25,
+                         border_width=2,
+                         corner_radius=10,
+                         # question=entry.get()
+                         )
     entry.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
     entry.pack()
-    send_button = ctk.CTkButton(master=root, text="Send ", command=send_message)
+    send_button = ctk.CTkButton(master=root, text="Send", command=send_message)
     send_button.pack(pady=12, padx=20)
     # home_frame.pack(pady=200, padx=60, fill="both", expand=True)
 
+
 def send_message():
     pass
+
 
 def open_signup():
     ctk.set_appearance_mode("dark")
@@ -60,7 +68,7 @@ def open_signup():
     frame = ctk.CTkScrollableFrame(master=signup_window)
     frame.pack(pady=20, padx=60, fill="both", expand=True)
 
-    label = ctk.CTkLabel(master=frame, text="Signup System", width=25, font=('calibri',40))
+    label = ctk.CTkLabel(master=frame, text="Signup System", width=25, font=('calibri', 40))
     label.pack(pady=12, padx=10)
 
     entry1 = ctk.CTkEntry(master=frame, placeholder_text="First name")
@@ -81,10 +89,10 @@ def open_signup():
     entry6 = ctk.CTkEntry(master=frame, placeholder_text="Email")
     entry6.pack(pady=12, padx=10)
 
-    button= ctk.CTkButton(master=frame, text="Login", command=signup_window.destroy)
+    button = ctk.CTkButton(master=frame, text="Login", command=signup_window.destroy)
     button.pack(pady=12, padx=10)
 
-    button= ctk.CTkButton(master=frame, text="Sign up", command=signup)
+    button = ctk.CTkButton(master=frame, text="Sign up", command=signup)
     button.pack(pady=12, padx=10)
 
     checkbox = ctk.CTkCheckBox(master=frame, text="Remember Me")
@@ -100,7 +108,7 @@ def open_signup():
 #     pyautogui.press("enter")
 
 
-label = ctk.CTkLabel(master=scrollable_frame, text="Login System", font=('calibri',40))
+label = ctk.CTkLabel(master=scrollable_frame, text="Login System", font=('calibri', 40))
 label.pack(pady=12, padx=10)
 
 entry1 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Username")
