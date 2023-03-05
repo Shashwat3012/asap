@@ -1,6 +1,10 @@
 import tkinter as tk
-
+import mysql.connector
 import customtkinter as ctk
+
+connection = mysql.connector.connect(host='localhost', user='root', password='mysql@23', port='3306',
+                                     database='asap_database')
+cursor = connection.cursor()
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
@@ -21,7 +25,30 @@ def login():
 
 
 def signup():
+    firstname = signup_entry1.get()
+    lastname = signup_entry2.get()
+    username = signup_entry3.get().lower()
+    password = signup_entry4.get()
+    phone = signup_entry5.get()
+    email = signup_entry6.get()
+
+    if username == "":
+        print("Username cannot be empty")
+
+    fetch_query = "SELECT * FROM asap_database.signup_table"
+    cursor.execute(fetch_query)
+    for row in cursor:
+        print(row[2])
+        if row[2] == username:
+            print("username already exists")
+            signup()
+
+    insert_query = "INSERT INTO asap_database.signup_table (first_name, last_name, username, password, phone, email) VALUES (%s, %s, %s, %s, %s, %s);"
+    values = (firstname, lastname, username, password, phone, email)
+    cursor.execute(insert_query, values)
+    connection.commit()
     print("Signup successful")
+    signup_window.destroy()
 
 
 def open_home():
@@ -60,7 +87,14 @@ def open_signup():
     # registerPage = Toplevel(root)
     # registerPage.geometry("800x500")
     # registerPage.title("Register")
+    global signup_entry1
+    global signup_entry2
+    global signup_entry3
+    global signup_entry4
+    global signup_entry5
+    global signup_entry6
 
+    global signup_window
     signup_window = ctk.CTkToplevel()
     signup_window.geometry("800x500")
     signup_window.title("ASAP Signup")
@@ -71,23 +105,23 @@ def open_signup():
     label = ctk.CTkLabel(master=frame, text="Signup System", width=25, font=('calibri', 40))
     label.pack(pady=12, padx=10)
 
-    entry1 = ctk.CTkEntry(master=frame, placeholder_text="First name")
-    entry1.pack(pady=12, padx=10)
+    signup_entry1 = ctk.CTkEntry(master=frame, placeholder_text="First name")
+    signup_entry1.pack(pady=12, padx=10)
 
-    entry2 = ctk.CTkEntry(master=frame, placeholder_text="Last name")
-    entry2.pack(pady=12, padx=10)
+    signup_entry2 = ctk.CTkEntry(master=frame, placeholder_text="Last name")
+    signup_entry2.pack(pady=12, padx=10)
 
-    entry3 = ctk.CTkEntry(master=frame, placeholder_text="Username")
-    entry3.pack(pady=12, padx=10)
+    signup_entry3 = ctk.CTkEntry(master=frame, placeholder_text="Username")
+    signup_entry3.pack(pady=12, padx=10)
 
-    entry4 = ctk.CTkEntry(master=frame, placeholder_text="Password", show="*")
-    entry4.pack(pady=12, padx=10)
+    signup_entry4 = ctk.CTkEntry(master=frame, placeholder_text="Password", show="*")
+    signup_entry4.pack(pady=12, padx=10)
 
-    entry5 = ctk.CTkEntry(master=frame, placeholder_text="Contact number")
-    entry5.pack(pady=12, padx=10)
+    signup_entry5 = ctk.CTkEntry(master=frame, placeholder_text="Contact number")
+    signup_entry5.pack(pady=12, padx=10)
 
-    entry6 = ctk.CTkEntry(master=frame, placeholder_text="Email")
-    entry6.pack(pady=12, padx=10)
+    signup_entry6 = ctk.CTkEntry(master=frame, placeholder_text="Email")
+    signup_entry6.pack(pady=12, padx=10)
 
     button = ctk.CTkButton(master=frame, text="Login", command=signup_window.destroy)
     button.pack(pady=12, padx=10)
