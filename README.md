@@ -9,3 +9,4 @@ Installations required for the setup
     pip install pyttsx3
     pip install speechRecognition
     pip install pyaudio
+    pip install mysql-connector
