@@ -85,6 +85,9 @@ if __name__ == "__main__":
         elif 'open youtube' in query:
             webbrowser.open("youtube.com")
 
+        elif 'open python' in query:
+            webbrowser.open("https:\\www.codewithharry.com\\blogpost\\python-cheatsheet\\")
+
         elif 'open google' in query:
             webbrowser.open("google.com")
 
