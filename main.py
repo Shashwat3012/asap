@@ -16,12 +16,47 @@ root.title("ASAP")
 scrollable_frame = ctk.CTkScrollableFrame(master=root, width=200, height=200)
 scrollable_frame.pack(pady=20, padx=60, fill="both", expand=True)
 
-
 question = ""
 
+
 def login():
-    print("Login Successful")
-    open_home()
+    login_username = login_entry1.get().lower()
+    login_username = login_username.replace(" ", "")
+    user_present = user_exists(login_username)
+    login_password = login_entry2.get()
+
+    if not user_present:
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("green")
+        popup = ctk.CTkToplevel()
+        popup.geometry("400x150")
+        popup.title("Signup status")
+        popup.attributes('-topmost', True)
+        frame = ctk.CTkScrollableFrame(master=popup)
+        frame.pack(pady=20, padx=60, fill="both", expand=True)
+        label = ctk.CTkLabel(master=frame, text="User not found\nSignup to create account", width=25,
+                             font=('calibri', 20))
+        label.pack(pady=12, padx=10)
+        button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+        button.pack(pady=12, padx=10)
+    else:
+        if not password_match(login_username, login_password):
+            print("Login Unsuccessful")
+
+        else:
+            print("login successful")
+            open_home()
+
+
+def password_match(luname, lpass):
+    select_query = f"SELECT password FROM asap_database.signup_table WHERE username = '{luname}'"
+    print(select_query)
+
+    cursor.execute(select_query)
+    print(cursor)
+    # db_pass =None
+    for row in cursor:
+        print(row)
 
 
 def signup():
@@ -34,7 +69,7 @@ def signup():
     phone = signup_entry5.get()
     email = signup_entry6.get()
 
-    if user_exists():
+    if user_exists(username):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
         popup = ctk.CTkToplevel()
@@ -74,20 +109,21 @@ def signup():
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
         popup = ctk.CTkToplevel()
-        popup.geometry("350x200")
+        popup.geometry("350x250")
         popup.title("Signup status")
         popup.attributes('-topmost', True)
         frame = ctk.CTkScrollableFrame(master=popup)
         frame.pack(pady=20, padx=60, fill="both", expand=True)
         label = ctk.CTkLabel(master=frame,
-                             text="Signup successful",
+                             text=f"Signup successful\nYour username:{username}",
                              width=25, font=('calibri', 20))
         label.pack(pady=12, padx=10)
         button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
         button.pack(pady=12, padx=10)
         signup_window.destroy()
 
-def user_exists():
+
+def user_exists(uname):
     # if username == "":
     #     print("Username cannot be empty")
     #
@@ -98,7 +134,7 @@ def user_exists():
     for row in cursor:
         existing_users.append(row[0])
 
-    if username in existing_users:
+    if uname in existing_users:
         return True
     else:
         return False
@@ -199,11 +235,11 @@ def open_signup():
 label = ctk.CTkLabel(master=scrollable_frame, text="Login System", font=('calibri', 40))
 label.pack(pady=12, padx=10)
 
-entry1 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Username")
-entry1.pack(pady=12, padx=10)
+login_entry1 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Username")
+login_entry1.pack(pady=12, padx=10)
 
-entry2 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Password", show="*")
-entry2.pack(pady=12, padx=10)
+login_entry2 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Password", show="*")
+login_entry2.pack(pady=12, padx=10)
 
 button = ctk.CTkButton(master=scrollable_frame, text="Login", command=login)
 button.pack(pady=12, padx=10)
@@ -218,6 +254,7 @@ checkbox = ctk.CTkCheckBox(master=scrollable_frame, text="Remember Me")
 checkbox.pack(pady=12, padx=10)
 
 root.mainloop()
+
 
 # vertical_scroll = Scrollbar(root)
 # vertical_scroll.pack(side=RIGHT, fill=Y)
