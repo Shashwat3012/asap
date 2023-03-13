@@ -10,3 +10,4 @@ Installations required for the setup
     pip install speechRecognition
     pip install pyaudio
     pip install mysql-connector
+    pip install cryptography
