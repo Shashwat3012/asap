@@ -25,12 +25,14 @@ def login():
     user_present = user_exists(login_username)
     login_password = login_entry2.get()
 
+    # password_match(login_username, login_password)
+
     if not user_present:
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
         popup = ctk.CTkToplevel()
         popup.geometry("400x150")
-        popup.title("Signup status")
+        popup.title("Login status")
         popup.attributes('-topmost', True)
         frame = ctk.CTkScrollableFrame(master=popup)
         frame.pack(pady=20, padx=60, fill="both", expand=True)
@@ -41,22 +43,52 @@ def login():
         button.pack(pady=12, padx=10)
     else:
         if not password_match(login_username, login_password):
+            ctk.set_appearance_mode("dark")
+            ctk.set_default_color_theme("green")
+            popup = ctk.CTkToplevel()
+            popup.geometry("500x200")
+            popup.title("Login status")
+            popup.attributes('-topmost', True)
+            frame = ctk.CTkScrollableFrame(master=popup)
+            frame.pack(pady=20, padx=60, fill="both", expand=True)
+            label = ctk.CTkLabel(master=frame, text="Incorrect password\nNote: Password is case sensitive", width=25,
+                                 font=('calibri', 20))
+            label.pack(pady=12, padx=10)
+            button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+            button.pack(pady=12, padx=10)
             print("Login Unsuccessful")
 
         else:
+            ctk.set_appearance_mode("dark")
+            ctk.set_default_color_theme("green")
+            popup = ctk.CTkToplevel()
+            popup.geometry("400x150")
+            popup.title("Signup status")
+            popup.attributes('-topmost', True)
+            frame = ctk.CTkScrollableFrame(master=popup)
+            frame.pack(pady=20, padx=60, fill="both", expand=True)
+            label = ctk.CTkLabel(master=frame, text="Login successful", width=25,
+                                 font=('calibri', 20))
+            label.pack(pady=12, padx=10)
+            button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+            button.pack(pady=12, padx=10)
             print("login successful")
             open_home()
 
 
 def password_match(luname, lpass):
-    select_query = f"SELECT password FROM asap_database.signup_table WHERE username = '{luname}'"
-    print(select_query)
-
+    select_query = f"SELECT password FROM asap_database.signup_table WHERE username = '{luname}';"
+    # print(select_query)
     cursor.execute(select_query)
-    print(cursor)
-    # db_pass =None
+    db_pass = []
     for row in cursor:
-        print(row)
+        db_pass.append(row[0])
+    # print(db_pass)
+
+    if lpass == db_pass[0]:
+        return True
+    else:
+        return False
 
 
 def signup():
