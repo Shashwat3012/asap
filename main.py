@@ -174,31 +174,64 @@ def user_exists(uname):
 
 def open_home():
     scrollable_frame.destroy()
+    scrollable_frame.configure(height=0, width=0)
     home()
 
 
 def home():
-    home_frame = ctk.CTkScrollableFrame(master=root)
+    global chatbox
+    chatbox = ctk.CTkTextbox(master=root, height=200, width=300)
+    chatbox.configure(state='disabled')
+    chatbox.pack(pady=12, padx=20)
 
     # input_field = tk.Entry(master=root, bd=0, bg="#D6D6D6", font="Arial")
     # input_field.place(x=128, y=401, height=30, width=265)
-    entry = ctk.CTkEntry(master=root,
-                         placeholder_text="Chat with me",
-                         width=500,
-                         height=25,
-                         border_width=2,
-                         corner_radius=10,
-                         # question=entry.get()
-                         )
-    entry.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-    entry.pack()
+    global chat_entry
+    chat_entry = ctk.CTkEntry(master=root,
+                              placeholder_text="Chat with me"
+                              # width=500,
+                              # height=25,
+                              # border_width=2,
+                              # corner_radius=10,
+                              # question=entry.get()
+                              )
+
+    # chat_entry.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+
+    chat_entry.pack(pady=12, padx=20)
     send_button = ctk.CTkButton(master=root, text="Send", command=send_message)
     send_button.pack(pady=12, padx=20)
+    voice_button = ctk.CTkButton(master=root, text="Voice search", command=send_message)
+    voice_button.pack(pady=12, padx=20)
+
+    # root.mainloop()
+
     # home_frame.pack(pady=200, padx=60, fill="both", expand=True)
 
 
 def send_message():
-    pass
+    message = chat_entry.get()
+
+    # Append the user's message to the chat log
+    chatbox.configure(state="normal")
+    chatbox.insert(tk.END, "You: " + message + "\n")
+    # chatbox.configure(foreground="#442265", font=("Verdana", 12))
+    chatbox.yview(tk.END)
+    chat_entry.delete(0, tk.END)
+
+    # Respond to the user's message
+    response = "I'm sorry, I don't understand."
+
+    # Append the chatbot's response to the chat log
+    chatbox.insert(tk.END, "Bot: " + response + "\n")
+    chatbox.configure(state='disabled')
+    chatbox.yview(tk.END)
+
+    # text = chat_entry.get()
+    # print(text)
+    # label = ctk.CTkLabel(master=chatbox, text=text, width=25, font=('calibri', 10))
+    # label.pack(pady=12)
 
 
 def open_signup():
