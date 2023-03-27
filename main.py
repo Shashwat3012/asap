@@ -6,15 +6,7 @@ connection = mysql.connector.connect(host='localhost', user='root', password='my
                                      database='asap_database')
 cursor = connection.cursor()
 
-ctk.set_appearance_mode("dark")
-ctk.set_default_color_theme("green")
 
-root = ctk.CTk()
-root.geometry("800x500")
-root.title("ASAP")
-
-scrollable_frame = ctk.CTkScrollableFrame(master=root, width=200, height=200)
-scrollable_frame.pack(pady=20, padx=60, fill="both", expand=True)
 
 question = ""
 
@@ -31,10 +23,10 @@ def login():
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
         popup = ctk.CTkToplevel()
-        popup.geometry("400x150")
+        popup.geometry("400x200")
         popup.title("Login status")
         popup.attributes('-topmost', True)
-        frame = ctk.CTkScrollableFrame(master=popup)
+        frame = ctk.CTkFrame(master=popup)
         frame.pack(pady=20, padx=60, fill="both", expand=True)
         label = ctk.CTkLabel(master=frame, text="User not found\nSignup to create account", width=25,
                              font=('calibri', 20))
@@ -49,7 +41,7 @@ def login():
             popup.geometry("500x200")
             popup.title("Login status")
             popup.attributes('-topmost', True)
-            frame = ctk.CTkScrollableFrame(master=popup)
+            frame = ctk.CTkFrame(master=popup)
             frame.pack(pady=20, padx=60, fill="both", expand=True)
             label = ctk.CTkLabel(master=frame, text="Incorrect password\nNote: Password is case sensitive", width=25,
                                  font=('calibri', 20))
@@ -173,21 +165,25 @@ def user_exists(uname):
 
 
 def open_home():
-    scrollable_frame.destroy()
-    scrollable_frame.configure(height=0, width=0)
+    root.destroy()
+    # scrollable_frame.configure(height=0, width=0)
     home()
 
 
 def home():
     global chatbox
-    chatbox = ctk.CTkTextbox(master=root, height=200, width=300)
+    main_root = ctk.CTk()
+    main_root.geometry("350x600")
+    main_root.title("ASAP")
+
+    chatbox = ctk.CTkTextbox(master=main_root, height=400, width=300)
     chatbox.configure(state='disabled')
     chatbox.pack(pady=12, padx=20)
 
     # input_field = tk.Entry(master=root, bd=0, bg="#D6D6D6", font="Arial")
     # input_field.place(x=128, y=401, height=30, width=265)
     global chat_entry
-    chat_entry = ctk.CTkEntry(master=root,
+    chat_entry = ctk.CTkEntry(master=main_root,
                               placeholder_text="Chat with me"
                               # width=500,
                               # height=25,
@@ -200,12 +196,12 @@ def home():
 
 
     chat_entry.pack(pady=12, padx=20)
-    send_button = ctk.CTkButton(master=root, text="Send", command=send_message)
+    send_button = ctk.CTkButton(master=main_root, text="Send", command=send_message)
     send_button.pack(pady=12, padx=20)
-    voice_button = ctk.CTkButton(master=root, text="Voice search", command=send_message)
+    voice_button = ctk.CTkButton(master=main_root, text="Voice search", command=send_message)
     voice_button.pack(pady=12, padx=20)
 
-    # root.mainloop()
+    main_root.mainloop()
 
     # home_frame.pack(pady=200, padx=60, fill="both", expand=True)
 
@@ -295,31 +291,45 @@ def open_signup():
 #     link = "https://accounts.google.com/signin"
 #     pyautogui.typewrite(link)
 #     pyautogui.press("enter")
+def main():
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("green")
+
+    global login_entry1, login_entry2, scrollable_frame, root
+
+    root = ctk.CTk()
+    root.geometry("800x500")
+    root.title("ASAP")
 
 
-label = ctk.CTkLabel(master=scrollable_frame, text="Login System", font=('calibri', 40))
-label.pack(pady=12, padx=10)
 
-login_entry1 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Username")
-login_entry1.pack(pady=12, padx=10)
+    scrollable_frame = ctk.CTkScrollableFrame(master=root, width=200, height=200)
+    scrollable_frame.pack(pady=20, padx=60, fill="both", expand=True)
 
-login_entry2 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Password", show="*")
-login_entry2.pack(pady=12, padx=10)
+    label = ctk.CTkLabel(master=scrollable_frame, text="Login System", font=('calibri', 40))
+    label.pack(pady=12, padx=10)
 
-button = ctk.CTkButton(master=scrollable_frame, text="Login", command=login)
-button.pack(pady=12, padx=10)
+    login_entry1 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Username")
+    login_entry1.pack(pady=12, padx=10)
 
-button = ctk.CTkButton(master=scrollable_frame, text="Sign up", command=open_signup)
-button.pack(pady=12, padx=10)
+    login_entry2 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Password", show="*")
+    login_entry2.pack(pady=12, padx=10)
 
-# button = ctk.CTkButton(master=frame, text="Login with google", command=googleLogin)
-# button.pack(pady=12, padx=10)
+    button = ctk.CTkButton(master=scrollable_frame, text="Login", command=login)
+    button.pack(pady=12, padx=10)
 
-checkbox = ctk.CTkCheckBox(master=scrollable_frame, text="Remember Me")
-checkbox.pack(pady=12, padx=10)
+    button = ctk.CTkButton(master=scrollable_frame, text="Sign up", command=open_signup)
+    button.pack(pady=12, padx=10)
 
-root.mainloop()
+    # button = ctk.CTkButton(master=frame, text="Login with google", command=googleLogin)
+    # button.pack(pady=12, padx=10)
 
+    checkbox = ctk.CTkCheckBox(master=scrollable_frame, text="Remember Me")
+    checkbox.pack(pady=12, padx=10)
+
+    root.mainloop()
+
+main()
 
 # vertical_scroll = Scrollbar(root)
 # vertical_scroll.pack(side=RIGHT, fill=Y)
