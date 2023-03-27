@@ -84,42 +84,40 @@ def speak(audio):
     engine.say(audio)
     engine.runAndWait()
 
+flag = False
+# Here it is hardcoded for true, set this variable flag as true or false based on typing or speaking from GUI
+# Currently set to voice command
+
 
 def get_response(user_input):
     split_message = re.split(r'\s+|[,;?!.-]\s*', user_input.lower())
     response = check_all_messages(split_message)
     return response
 
+    while True:
+        if flag is True:
+            print('Bot: ' + get_response(input('You: ')))
 
-flag = False
-# Here it is hardcoded for true, set this variable flag as true or false based on typing or speaking from GUI
-# Currently set to voice command
+        else:
+            query = take_command().lower()
+            # Logic for executing tasks based on query
+            if 'wikipedia' in query:
+                speak('Searching Wikipedia...')
+                query = query.replace("wikipedia", "")
+                results = wikipedia.summary(query, sentences=2)
+                speak("According to Wikipedia")
+                print(results)
+                speak(results)
 
+            elif 'open youtube' in query:
+                webbrowser.open("youtube.com")
 
-while True:
-    if flag is True:
-        print('Bot: ' + get_response(input('You: ')))
+            elif 'open google' in query:
+                webbrowser.open("google.com")
 
-    else:
-        query = take_command().lower()
-        # Logic for executing tasks based on query
-        if 'wikipedia' in query:
-            speak('Searching Wikipedia...')
-            query = query.replace("wikipedia", "")
-            results = wikipedia.summary(query, sentences=2)
-            speak("According to Wikipedia")
-            print(results)
-            speak(results)
+            elif 'open stackoverflow' in query:
+                webbrowser.open("stackoverflow.com")
 
-        elif 'open youtube' in query:
-            webbrowser.open("youtube.com")
-
-        elif 'open google' in query:
-            webbrowser.open("google.com")
-
-        elif 'open stackoverflow' in query:
-            webbrowser.open("stackoverflow.com")
-
-        elif 'the time' in query:
-            strTime = datetime.datetime.now().strftime("%H:%M:%S")
-            speak(f"Sir, the time is {strTime}")
+            elif 'the time' in query:
+                strTime = datetime.datetime.now().strftime("%H:%M:%S")
+                speak(f"Sir, the time is {strTime}")

@@ -1,6 +1,7 @@
 import tkinter as tk
 import mysql.connector
 import customtkinter as ctk
+import logic
 
 connection = mysql.connector.connect(host='localhost', user='root', password='mysql@23', port='3306',
                                      database='asap_database')
@@ -194,6 +195,7 @@ def home():
 
     # chat_entry.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
+    # print(chat_entry)
 
     chat_entry.pack(pady=12, padx=20)
     send_button = ctk.CTkButton(master=main_root, text="Send", command=send_message)
@@ -208,7 +210,15 @@ def home():
 
 def send_message():
     message = chat_entry.get()
-
+    print(message)
+    logic.flag = True
+    response = logic.get_response(message)
+    print(response)
+    # print(response)
+    # select_query = f"SELECT responses from asap_database.responses where keywords = '{message}';"
+    # values = (message)
+    # cursor.execute(select_query, values)
+    # connection.commit()
     # Append the user's message to the chat log
     chatbox.configure(state="normal")
     chatbox.insert(tk.END, "You: " + message + "\n")
@@ -217,7 +227,8 @@ def send_message():
     chat_entry.delete(0, tk.END)
 
     # Respond to the user's message
-    response = "I'm sorry, I don't understand."
+    # response = "I'm sorry, I don't understand."
+    # response = select_query
 
     # Append the chatbot's response to the chat log
     chatbox.insert(tk.END, "Bot: " + response + "\n")
