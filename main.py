@@ -213,7 +213,7 @@ def send_message():
     print(message)
     logic.flag = True
     # response = logic.get_response(message)
-    cursor.execute(f"SELECT responses FROM asap_database.responses_table WHERE keywords = '{message}';")
+    cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{message}';")
     # print(f"SELECT responses FROM asap_database.responses_table WHERE keywords = '{message}';")
     response = cursor.fetchone()
     # connection.commit()
