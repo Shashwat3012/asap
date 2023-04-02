@@ -2,12 +2,15 @@ import tkinter as tk
 import mysql.connector
 import customtkinter as ctk
 import logic
+from cryptography.fernet import Fernet
+
 
 connection = mysql.connector.connect(host='localhost', user='root', password='mysql@23', port='3306',
                                      database='asap_database')
 cursor = connection.cursor(buffered=True)
 
-
+encryption_key = b'-S1prVK-PQhWRSDOQpW_qnoRMBRCAdaq2y28W_uy6FQ='
+crypter = Fernet(encryption_key)
 
 question = ""
 
@@ -77,8 +80,9 @@ def password_match(luname, lpass):
     for row in cursor:
         db_pass.append(row[0])
     # print(db_pass)
-
-    if lpass == db_pass[0]:
+    database_password = bytes(db_pass[0], 'utf-8')
+    decrypted_db_password = decrypt_password(database_password).decode()
+    if lpass == decrypted_db_password:
         return True
     else:
         return False
@@ -91,6 +95,7 @@ def signup():
     username = signup_entry3.get().lower()
     username = username.replace(" ", "")
     password = signup_entry4.get()
+    password = encrypt_password(password)
     phone = signup_entry5.get()
     email = signup_entry6.get()
 
@@ -146,6 +151,16 @@ def signup():
         button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
         button.pack(pady=12, padx=10)
         signup_window.destroy()
+
+def encrypt_password(passw):
+    password = bytes(passw, 'utf-8')
+    encrypted_password = crypter.encrypt(password)
+    return encrypted_password
+
+def decrypt_password(passw):
+    decrypted_password = crypter.decrypt(passw)
+    return decrypted_password
+
 
 
 def user_exists(uname):
