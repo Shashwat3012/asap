@@ -208,16 +208,26 @@ def home():
     # home_frame.pack(pady=200, padx=60, fill="both", expand=True)
 
 
+ignore_list = ['what', 'is', 'the', 'a', 'an', 'how', 'are']
+
+
 def send_message():
     message = chat_entry.get()
     print(message)
     logic.flag = True
     # response = logic.get_response(message)
-    cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{message}';")
-    # print(f"SELECT responses FROM asap_database.responses_table WHERE keywords = '{message}';")
-    response = cursor.fetchone()
-    # connection.commit()
-    print(response)
+
+    word = message.split()
+    print(word)
+    for i in word:
+        print(i)
+        if i in ignore_list:
+            continue
+        else:
+            cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
+            response = cursor.fetchone()
+            break
+        # if keyword in database then break and show the response else traverse whole sentence
     # Append the user's message to the chat log
     chatbox.configure(state="normal")
     chatbox.insert(tk.END, "You: " + message + "\n")

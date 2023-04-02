@@ -10,3 +10,17 @@ def unknown():
                 "What does that mean?"][random.randrange(4)]
 
     return response
+
+
+# txt = "welcome to the jungle"
+#
+# x = txt.split()
+#
+# print(x)
+
+# Python3 code to iterate over a list
+# list = ['what', 'is', 'iste']
+#
+# # Using for loop
+# for i in list:
+#     print(i)
