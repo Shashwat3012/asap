@@ -200,7 +200,7 @@ def home():
     chat_entry.pack(pady=12, padx=20)
     send_button = ctk.CTkButton(master=main_root, text="Send", command=send_message)
     send_button.pack(pady=12, padx=20)
-    voice_button = ctk.CTkButton(master=main_root, text="Voice search", command=send_message)
+    voice_button = ctk.CTkButton(master=main_root, text="Voice search", command=voice_message)
     voice_button.pack(pady=12, padx=20)
 
     main_root.mainloop()
@@ -209,6 +209,43 @@ def home():
 
 
 ignore_list = ['what', 'is', 'the', 'a', 'an', 'how', 'are']
+
+def voice_message():
+    user_query = logic.take_command()
+    send_voice_message(user_query)
+
+def send_voice_message(query):
+    message = query
+    print(message)
+    logic.flag = True
+    # response = logic.get_response(message)
+
+    word = message.split()
+    print(word)
+    for i in word:
+        print(i)
+        if i in ignore_list:
+            continue
+        else:
+            cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
+            response = cursor.fetchone()
+            break
+        # if keyword in database then break and show the response else traverse whole sentence
+    # Append the user's message to the chat log
+    chatbox.configure(state="normal")
+    chatbox.insert(tk.END, "You: " + message + "\n \n")
+    # chatbox.configure(foreground="#442265", font=("Verdana", 12))
+    chatbox.yview(tk.END)
+    chat_entry.delete(0, tk.END)
+
+    # Respond to the user's message
+    # response = "I'm sorry, I don't understand."
+    # response = select_query
+
+    # Append the chatbot's response to the chat log
+    chatbox.insert(tk.END, "Bot: " + response[0] + "\n \n")
+    chatbox.configure(state='disabled')
+    chatbox.yview(tk.END)
 
 
 def send_message():
@@ -230,7 +267,7 @@ def send_message():
         # if keyword in database then break and show the response else traverse whole sentence
     # Append the user's message to the chat log
     chatbox.configure(state="normal")
-    chatbox.insert(tk.END, "You: " + message + "\n")
+    chatbox.insert(tk.END, "You: " + message + "\n \n")
     # chatbox.configure(foreground="#442265", font=("Verdana", 12))
     chatbox.yview(tk.END)
     chat_entry.delete(0, tk.END)
@@ -240,7 +277,7 @@ def send_message():
     # response = select_query
 
     # Append the chatbot's response to the chat log
-    chatbox.insert(tk.END, "Bot: " + response[0] + "\n")
+    chatbox.insert(tk.END, "Bot: " + response[0] + "\n \n")
     chatbox.configure(state='disabled')
     chatbox.yview(tk.END)
 
