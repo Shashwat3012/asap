@@ -223,7 +223,7 @@ def home():
     # home_frame.pack(pady=200, padx=60, fill="both", expand=True)
 
 
-ignore_list = ['what', 'is', 'the', 'a', 'an', 'how', 'are']
+ignore_list = ['what', 'is', 'the', 'a', 'an', 'how', 'are', 'where', 'good', '?', 'why', 'when', 'college', 'vesit', 'ves']
 
 def voice_message():
     user_query = logic.take_command()
