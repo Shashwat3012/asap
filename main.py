@@ -235,16 +235,20 @@ def send_voice_message(query):
     logic.flag = True
     # response = logic.get_response(message)
 
-    word = message.split()
-    print(word)
-    for i in word:
-        print(i)
-        if i in ignore_list:
-            continue
-        else:
-            cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
-            response = cursor.fetchone()
-            break
+    keyword = return_keyword(message)
+    cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
+    response = cursor.fetchone()
+
+    # word = message.split()
+    # print(word)
+    # for i in word:
+    #     print(i)
+    #     if i in ignore_list:
+    #         continue
+    #     else:
+    #         cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
+    #         response = cursor.fetchone()
+    #         break
         # if keyword in database then break and show the response else traverse whole sentence
     # Append the user's message to the chat log
     chatbox.configure(state="normal")
@@ -264,21 +268,24 @@ def send_voice_message(query):
 
 
 def send_message():
-    message = chat_entry.get()
+    message = chat_entry.get().lower()
     print(message)
     logic.flag = True
     # response = logic.get_response(message)
 
-    word = message.split()
-    print(word)
-    for i in word:
-        print(i)
-        if i in ignore_list:
-            continue
-        else:
-            cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
-            response = cursor.fetchone()
-            break
+    keyword = return_keyword(message)
+    cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
+    response = cursor.fetchone()
+
+    # print(word)
+    # for i in word:
+    #     print(i)
+    #     if i in ignore_list:
+    #         continue
+    #     else:
+    #         cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
+    #         response = cursor.fetchone()
+    #         break
         # if keyword in database then break and show the response else traverse whole sentence
     # Append the user's message to the chat log
     chatbox.configure(state="normal")
@@ -301,6 +308,21 @@ def send_message():
     # label = ctk.CTkLabel(master=chatbox, text=text, width=25, font=('calibri', 10))
     # label.pack(pady=12)
 
+def return_keyword(string):
+    word = string.split()
+    fetch_query = "SELECT keywords FROM asap_database.responses"
+    cursor.execute(fetch_query)
+    keywords = []
+
+    for row in cursor:
+        keywords.append(row[0])
+
+    print(keywords)
+    print(word)
+
+    for i in word:
+        if i in keywords:
+            return i
 
 def open_signup():
     ctk.set_appearance_mode("dark")
