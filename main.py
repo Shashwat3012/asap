@@ -3,6 +3,7 @@ import mysql.connector
 import customtkinter as ctk
 import logic
 from cryptography.fernet import Fernet
+import random
 
 
 connection = mysql.connector.connect(host='localhost', user='root', password='mysql@23', port='3306',
@@ -236,8 +237,14 @@ def send_voice_message(query):
     # response = logic.get_response(message)
 
     keyword = return_keyword(message)
-    cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
-    response = cursor.fetchone()
+    if keyword is None:
+        response = []
+        idk_message  =  ['Can you kindly rephrase that?', 'Sorry i didn\'t get that', 'What did you mean? Kindly rewrite']
+        i = random.randint(0, 2)
+        response.append(idk_message[i])
+    else:
+        cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
+        response = cursor.fetchone()
 
     # word = message.split()
     # print(word)
@@ -274,8 +281,15 @@ def send_message():
     # response = logic.get_response(message)
 
     keyword = return_keyword(message)
-    cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
-    response = cursor.fetchone()
+    print(keyword)
+    if keyword is None:
+        response = []
+        idk_message  =  ['Can you kindly rephrase that?', 'Sorry i didn\'t get that', 'What did you mean? Kindly rewrite']
+        i = random.randint(0, 2)
+        response.append(idk_message[i])
+    else:
+        cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
+        response = cursor.fetchone()
 
     # print(word)
     # for i in word:
