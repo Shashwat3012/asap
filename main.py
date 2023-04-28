@@ -15,78 +15,96 @@ crypter = Fernet(encryption_key)
 
 question = ""
 
+def main():
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("green")
 
-def login():
-    login_username = login_entry1.get().lower()
-    login_username = login_username.replace(" ", "")
-    user_present = user_exists(login_username)
-    login_password = login_entry2.get()
+    global login_entry1, login_entry2, scrollable_frame, root
 
-    # password_match(login_username, login_password)
-
-    if not user_present:
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("green")
-        popup = ctk.CTkToplevel()
-        popup.geometry("400x200")
-        popup.title("Login status")
-        popup.attributes('-topmost', True)
-        frame = ctk.CTkFrame(master=popup)
-        frame.pack(pady=20, padx=60, fill="both", expand=True)
-        label = ctk.CTkLabel(master=frame, text="User not found\nSignup to create account", width=25,
-                             font=('calibri', 20))
-        label.pack(pady=12, padx=10)
-        button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
-        button.pack(pady=12, padx=10)
-    else:
-        if not password_match(login_username, login_password):
-            ctk.set_appearance_mode("dark")
-            ctk.set_default_color_theme("green")
-            popup = ctk.CTkToplevel()
-            popup.geometry("500x200")
-            popup.title("Login status")
-            popup.attributes('-topmost', True)
-            frame = ctk.CTkFrame(master=popup)
-            frame.pack(pady=20, padx=60, fill="both", expand=True)
-            label = ctk.CTkLabel(master=frame, text="Incorrect password\nNote: Password is case sensitive", width=25,
-                                 font=('calibri', 20))
-            label.pack(pady=12, padx=10)
-            button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
-            button.pack(pady=12, padx=10)
-            print("Login Unsuccessful")
-
-        else:
-            ctk.set_appearance_mode("dark")
-            ctk.set_default_color_theme("green")
-            popup = ctk.CTkToplevel()
-            popup.geometry("400x150")
-            popup.title("Signup status")
-            popup.attributes('-topmost', True)
-            frame = ctk.CTkScrollableFrame(master=popup)
-            frame.pack(pady=20, padx=60, fill="both", expand=True)
-            label = ctk.CTkLabel(master=frame, text="Login successful", width=25,
-                                 font=('calibri', 20))
-            label.pack(pady=12, padx=10)
-            button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
-            button.pack(pady=12, padx=10)
-            print("login successful")
-            open_home()
+    root = ctk.CTk()
+    root.geometry("800x500")
+    root.title("ASAP")
 
 
-def password_match(luname, lpass):
-    select_query = f"SELECT password FROM asap_database.signup_table WHERE username = '{luname}';"
-    # print(select_query)
-    cursor.execute(select_query)
-    db_pass = []
-    for row in cursor:
-        db_pass.append(row[0])
-    # print(db_pass)
-    database_password = bytes(db_pass[0], 'utf-8')
-    decrypted_db_password = decrypt_password(database_password).decode()
-    if lpass == decrypted_db_password:
-        return True
-    else:
-        return False
+
+    scrollable_frame = ctk.CTkScrollableFrame(master=root, width=200, height=200)
+    scrollable_frame.pack(pady=20, padx=60, fill="both", expand=True)
+
+    label = ctk.CTkLabel(master=scrollable_frame, text="Login System", font=('calibri', 40))
+    label.pack(pady=12, padx=10)
+
+    login_entry1 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Username")
+    login_entry1.pack(pady=12, padx=10)
+
+    login_entry2 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Password", show="*")
+    login_entry2.pack(pady=12, padx=10)
+
+    button = ctk.CTkButton(master=scrollable_frame, text="Login", command=login)
+    button.pack(pady=12, padx=10)
+
+    button = ctk.CTkButton(master=scrollable_frame, text="Sign up", command=open_signup)
+    button.pack(pady=12, padx=10)
+
+    # button = ctk.CTkButton(master=frame, text="Login with google", command=googleLogin)
+    # button.pack(pady=12, padx=10)
+
+    checkbox = ctk.CTkCheckBox(master=scrollable_frame, text="Remember Me")
+    checkbox.pack(pady=12, padx=10)
+
+    root.mainloop()
+
+def open_signup():
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("green")
+
+    # registerPage = Toplevel(root)
+    # registerPage.geometry("800x500")
+    # registerPage.title("Register")
+    global signup_entry1
+    global signup_entry2
+    global signup_entry3
+    global signup_entry4
+    global signup_entry5
+    global signup_entry6
+
+    global signup_window
+    signup_window = ctk.CTkToplevel()
+    signup_window.geometry("800x500")
+    signup_window.title("ASAP Signup")
+    signup_window.attributes('-topmost', True)
+
+    frame = ctk.CTkScrollableFrame(master=signup_window)
+    frame.pack(pady=20, padx=60, fill="both", expand=True)
+
+    label = ctk.CTkLabel(master=frame, text="Signup System", width=25, font=('calibri', 40))
+    label.pack(pady=12, padx=10)
+
+    signup_entry1 = ctk.CTkEntry(master=frame, placeholder_text="First name")
+    signup_entry1.pack(pady=12, padx=10)
+
+    signup_entry2 = ctk.CTkEntry(master=frame, placeholder_text="Last name")
+    signup_entry2.pack(pady=12, padx=10)
+
+    signup_entry3 = ctk.CTkEntry(master=frame, placeholder_text="Username")
+    signup_entry3.pack(pady=12, padx=10)
+
+    signup_entry4 = ctk.CTkEntry(master=frame, placeholder_text="Password", show="*")
+    signup_entry4.pack(pady=12, padx=10)
+
+    signup_entry5 = ctk.CTkEntry(master=frame, placeholder_text="Contact number")
+    signup_entry5.pack(pady=12, padx=10)
+
+    signup_entry6 = ctk.CTkEntry(master=frame, placeholder_text="Email")
+    signup_entry6.pack(pady=12, padx=10)
+
+    button = ctk.CTkButton(master=frame, text="Login", command=signup_window.destroy)
+    button.pack(pady=12, padx=10)
+
+    button = ctk.CTkButton(master=frame, text="Sign up", command=signup)
+    button.pack(pady=12, padx=10)
+
+    checkbox = ctk.CTkCheckBox(master=frame, text="Remember Me")
+    checkbox.pack(pady=12, padx=10)
 
 
 def signup():
@@ -153,17 +171,6 @@ def signup():
         button.pack(pady=12, padx=10)
         signup_window.destroy()
 
-def encrypt_password(passw):
-    password = bytes(passw, 'utf-8')
-    encrypted_password = crypter.encrypt(password)
-    return encrypted_password
-
-def decrypt_password(passw):
-    decrypted_password = crypter.decrypt(passw)
-    return decrypted_password
-
-
-
 def user_exists(uname):
     # if username == "":
     #     print("Username cannot be empty")
@@ -180,6 +187,85 @@ def user_exists(uname):
     else:
         return False
 
+def encrypt_password(passw):
+    password = bytes(passw, 'utf-8')
+    encrypted_password = crypter.encrypt(password)
+    return encrypted_password
+
+def login():
+    login_username = login_entry1.get().lower()
+    login_username = login_username.replace(" ", "")
+    user_present = user_exists(login_username)
+    login_password = login_entry2.get()
+
+    # password_match(login_username, login_password)
+
+    if not user_present:
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("green")
+        popup = ctk.CTkToplevel()
+        popup.geometry("400x200")
+        popup.title("Login status")
+        popup.attributes('-topmost', True)
+        frame = ctk.CTkFrame(master=popup)
+        frame.pack(pady=20, padx=60, fill="both", expand=True)
+        label = ctk.CTkLabel(master=frame, text="User not found\nSignup to create account", width=25,
+                             font=('calibri', 20))
+        label.pack(pady=12, padx=10)
+        button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+        button.pack(pady=12, padx=10)
+    else:
+        if not password_match(login_username, login_password):
+            ctk.set_appearance_mode("dark")
+            ctk.set_default_color_theme("green")
+            popup = ctk.CTkToplevel()
+            popup.geometry("500x200")
+            popup.title("Login status")
+            popup.attributes('-topmost', True)
+            frame = ctk.CTkFrame(master=popup)
+            frame.pack(pady=20, padx=60, fill="both", expand=True)
+            label = ctk.CTkLabel(master=frame, text="Incorrect password\nNote: Password is case sensitive", width=25,
+                                 font=('calibri', 20))
+            label.pack(pady=12, padx=10)
+            button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+            button.pack(pady=12, padx=10)
+            print("Login Unsuccessful")
+
+        else:
+            ctk.set_appearance_mode("dark")
+            ctk.set_default_color_theme("green")
+            popup = ctk.CTkToplevel()
+            popup.geometry("400x150")
+            popup.title("Signup status")
+            popup.attributes('-topmost', True)
+            frame = ctk.CTkScrollableFrame(master=popup)
+            frame.pack(pady=20, padx=60, fill="both", expand=True)
+            label = ctk.CTkLabel(master=frame, text="Login successful", width=25,
+                                 font=('calibri', 20))
+            label.pack(pady=12, padx=10)
+            button = ctk.CTkButton(master=frame, text="OK", command=popup.destroy)
+            button.pack(pady=12, padx=10)
+            print("login successful")
+            open_home()
+
+def decrypt_password(passw):
+    decrypted_password = crypter.decrypt(passw)
+    return decrypted_password
+
+def password_match(luname, lpass):
+    select_query = f"SELECT password FROM asap_database.signup_table WHERE username = '{luname}';"
+    # print(select_query)
+    cursor.execute(select_query)
+    db_pass = []
+    for row in cursor:
+        db_pass.append(row[0])
+    # print(db_pass)
+    database_password = bytes(db_pass[0], 'utf-8')
+    decrypted_db_password = decrypt_password(database_password).decode()
+    if lpass == decrypted_db_password:
+        return True
+    else:
+        return False
 
 def open_home():
     root.destroy()
@@ -225,54 +311,6 @@ def home():
 
 
 ignore_list = ['what', 'is', 'the', 'a', 'an', 'how', 'are', 'where', 'good', '?', 'why', 'when', 'college', 'vesit', 'ves']
-
-def voice_message():
-    user_query = logic.take_command()
-    send_voice_message(user_query)
-
-def send_voice_message(query):
-    message = query
-    print(message)
-    logic.flag = True
-    # response = logic.get_response(message)
-
-    keyword = return_keyword(message)
-    if keyword is None:
-        response = []
-        idk_message  =  ['Can you kindly rephrase that?', 'Sorry i didn\'t get that', 'What did you mean? Kindly rewrite']
-        i = random.randint(0, 2)
-        response.append(idk_message[i])
-    else:
-        cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
-        response = cursor.fetchone()
-
-    # word = message.split()
-    # print(word)
-    # for i in word:
-    #     print(i)
-    #     if i in ignore_list:
-    #         continue
-    #     else:
-    #         cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
-    #         response = cursor.fetchone()
-    #         break
-        # if keyword in database then break and show the response else traverse whole sentence
-    # Append the user's message to the chat log
-    chatbox.configure(state="normal")
-    chatbox.insert(tk.END, "You: " + message + "\n \n")
-    # chatbox.configure(foreground="#442265", font=("Verdana", 12))
-    chatbox.yview(tk.END)
-    chat_entry.delete(0, tk.END)
-
-    # Respond to the user's message
-    # response = "I'm sorry, I don't understand."
-    # response = select_query
-
-    # Append the chatbot's response to the chat log
-    chatbox.insert(tk.END, "Bot: " + response[0] + "\n \n")
-    chatbox.configure(state='disabled')
-    chatbox.yview(tk.END)
-
 
 def send_message():
     message = chat_entry.get().lower()
@@ -331,65 +369,59 @@ def return_keyword(string):
     for row in cursor:
         keywords.append(row[0])
 
-    print(keywords)
-    print(word)
+    # print(keywords)
+    # print(word)
 
     for i in word:
         if i in keywords:
             return i
 
-def open_signup():
-    ctk.set_appearance_mode("dark")
-    ctk.set_default_color_theme("green")
+def voice_message():
+    user_query = logic.take_command()
+    send_voice_message(user_query)
 
-    # registerPage = Toplevel(root)
-    # registerPage.geometry("800x500")
-    # registerPage.title("Register")
-    global signup_entry1
-    global signup_entry2
-    global signup_entry3
-    global signup_entry4
-    global signup_entry5
-    global signup_entry6
+def send_voice_message(query):
+    message = query
+    print(message)
+    logic.flag = True
+    # response = logic.get_response(message)
 
-    global signup_window
-    signup_window = ctk.CTkToplevel()
-    signup_window.geometry("800x500")
-    signup_window.title("ASAP Signup")
-    signup_window.attributes('-topmost', True)
+    keyword = return_keyword(message)
+    if keyword is None:
+        response = []
+        idk_message  =  ['Can you kindly rephrase that?', 'Sorry i didn\'t get that', 'What did you mean? Kindly rewrite']
+        i = random.randint(0, 2)
+        response.append(idk_message[i])
+    else:
+        cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{keyword}';")
+        response = cursor.fetchone()
 
-    frame = ctk.CTkScrollableFrame(master=signup_window)
-    frame.pack(pady=20, padx=60, fill="both", expand=True)
+    # word = message.split()
+    # print(word)
+    # for i in word:
+    #     print(i)
+    #     if i in ignore_list:
+    #         continue
+    #     else:
+    #         cursor.execute(f"SELECT responses FROM asap_database.responses WHERE keywords = '{i}';")
+    #         response = cursor.fetchone()
+    #         break
+        # if keyword in database then break and show the response else traverse whole sentence
+    # Append the user's message to the chat log
+    chatbox.configure(state="normal")
+    chatbox.insert(tk.END, "You: " + message + "\n \n")
+    # chatbox.configure(foreground="#442265", font=("Verdana", 12))
+    chatbox.yview(tk.END)
+    chat_entry.delete(0, tk.END)
 
-    label = ctk.CTkLabel(master=frame, text="Signup System", width=25, font=('calibri', 40))
-    label.pack(pady=12, padx=10)
+    # Respond to the user's message
+    # response = "I'm sorry, I don't understand."
+    # response = select_query
 
-    signup_entry1 = ctk.CTkEntry(master=frame, placeholder_text="First name")
-    signup_entry1.pack(pady=12, padx=10)
-
-    signup_entry2 = ctk.CTkEntry(master=frame, placeholder_text="Last name")
-    signup_entry2.pack(pady=12, padx=10)
-
-    signup_entry3 = ctk.CTkEntry(master=frame, placeholder_text="Username")
-    signup_entry3.pack(pady=12, padx=10)
-
-    signup_entry4 = ctk.CTkEntry(master=frame, placeholder_text="Password", show="*")
-    signup_entry4.pack(pady=12, padx=10)
-
-    signup_entry5 = ctk.CTkEntry(master=frame, placeholder_text="Contact number")
-    signup_entry5.pack(pady=12, padx=10)
-
-    signup_entry6 = ctk.CTkEntry(master=frame, placeholder_text="Email")
-    signup_entry6.pack(pady=12, padx=10)
-
-    button = ctk.CTkButton(master=frame, text="Login", command=signup_window.destroy)
-    button.pack(pady=12, padx=10)
-
-    button = ctk.CTkButton(master=frame, text="Sign up", command=signup)
-    button.pack(pady=12, padx=10)
-
-    checkbox = ctk.CTkCheckBox(master=frame, text="Remember Me")
-    checkbox.pack(pady=12, padx=10)
+    # Append the chatbot's response to the chat log
+    chatbox.insert(tk.END, "Bot: " + response[0] + "\n \n")
+    chatbox.configure(state='disabled')
+    chatbox.yview(tk.END)
 
 
 # def googleLogin():
@@ -399,43 +431,7 @@ def open_signup():
 #     link = "https://accounts.google.com/signin"
 #     pyautogui.typewrite(link)
 #     pyautogui.press("enter")
-def main():
-    ctk.set_appearance_mode("dark")
-    ctk.set_default_color_theme("green")
 
-    global login_entry1, login_entry2, scrollable_frame, root
-
-    root = ctk.CTk()
-    root.geometry("800x500")
-    root.title("ASAP")
-
-
-
-    scrollable_frame = ctk.CTkScrollableFrame(master=root, width=200, height=200)
-    scrollable_frame.pack(pady=20, padx=60, fill="both", expand=True)
-
-    label = ctk.CTkLabel(master=scrollable_frame, text="Login System", font=('calibri', 40))
-    label.pack(pady=12, padx=10)
-
-    login_entry1 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Username")
-    login_entry1.pack(pady=12, padx=10)
-
-    login_entry2 = ctk.CTkEntry(master=scrollable_frame, placeholder_text="Password", show="*")
-    login_entry2.pack(pady=12, padx=10)
-
-    button = ctk.CTkButton(master=scrollable_frame, text="Login", command=login)
-    button.pack(pady=12, padx=10)
-
-    button = ctk.CTkButton(master=scrollable_frame, text="Sign up", command=open_signup)
-    button.pack(pady=12, padx=10)
-
-    # button = ctk.CTkButton(master=frame, text="Login with google", command=googleLogin)
-    # button.pack(pady=12, padx=10)
-
-    checkbox = ctk.CTkCheckBox(master=scrollable_frame, text="Remember Me")
-    checkbox.pack(pady=12, padx=10)
-
-    root.mainloop()
 
 main()
 
